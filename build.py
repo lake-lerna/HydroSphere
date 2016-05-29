@@ -1,4 +1,4 @@
-from pybuilder.core import use_plugin, init
+from pybuilder.core import use_plugin, init, Author
 
 use_plugin("python.core")
 use_plugin("python.unittest")
@@ -35,3 +35,7 @@ def set_properties(project):
         'Topic :: Software Development :: Testing',
         'Topic :: Software Development :: Quality Assurance'
     ])
+
+    project.build_depends_on('shell_command')
+    project.build_depends_on('fabric')
+    project.build_depends_on('google-api-python-client')
