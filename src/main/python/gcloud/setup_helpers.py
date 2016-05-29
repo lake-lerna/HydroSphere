@@ -33,7 +33,7 @@ def get_mesos_x_ips(setup_ips_dir, x="all"):
         ips = [line.rstrip('\n') for line in f]
         f.close()
     except:
-        print ("WARN: Perhaps file %s does not exist" % file_path_name)
+        print("WARN: Perhaps file %s does not exist" % file_path_name)
         return
     return ips
 
@@ -117,14 +117,15 @@ def spawn_instance(instance_name, os_name, dst_user, ssh_key_file, config, machi
                 " --type " + disk1_type + " --size=" + disk1_size + " -q"
     print("disk1_cmd=%s" % disk1_cmd)
     shell_call(disk1_cmd)
-    disk2_cmd = "gcloud compute disks create " + instance_name + "-d2 --type " + disk2_type + " --size=" + disk2_size + " -q"
+    disk2_cmd = "gcloud compute disks create " + instance_name + "-d2 --type " + disk2_type + " --size=" + disk2_size \
+                + " -q"
     print("disk2_cmd=%s" % disk2_cmd)
     shell_call(disk2_cmd)
     cmd = "gcloud compute instances create " + instance_name + " --machine-type " + machine_type + \
           " --network net-10-10 --maintenance-policy MIGRATE --scopes https://www.googleapis.com/auth/cloud-platform " \
           "--disk name=" + instance_name + "-d1,mode=rw,boot=yes,auto-delete=yes --disk name=" + instance_name + \
           "-d2,mode=rw,boot=no,auto-delete=yes --no-address --tags no-ip --metadata-from-file sshKeys=" + pathname
-    print ("create_instance_cmd = %s" % cmd)
+    print("create_instance_cmd = %s" % cmd)
     shell_call(cmd)
 
 
@@ -132,7 +133,7 @@ def delete_instance(config, ip):
     command = "gcloud compute instances list | grep -w " + ip
     output = run_command(command)      # tahir-deploymentid-section-tag-0 us-central1-f n1-standard-4 10.10.0.28 RUNNING
     instance_name = output.split()[0]  # tahir-deploymentid-section-tag-0
-    print ("Removing instance %s" % instance_name)
+    print("Removing instance %s" % instance_name)
     compute.instances().delete(project=get_setting_val(config, "project"), zone=get_setting_val(config, "zone"),
                                instance=instance_name).execute()
 
@@ -173,7 +174,7 @@ def is_host_up(ip):
         s.connect((ip, 22))
         host_status = True
     except socket.error as e:
-        print "Error on connect: %s" % e
+        print("Error on connect: %s" % e)
     s.close()
     socket.setdefaulttimeout(original_timeout)
     return host_status

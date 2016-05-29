@@ -56,7 +56,7 @@ def setup(step, config):
         #               2. Current script will start from step 3 and will be called mesos_setup().
         #               3. Another script will take infra as argument (GCE, AWS, Azure) and will call appropriate
         #                    infra script along with mesos setup.
-        print "==> Writing mesos masters ips in " + local_work_dir + "/.mesos_masters_ips files"
+        print("==> Writing mesos masters ips in " + local_work_dir + "/.mesos_masters_ips files")
         master_ips = setup_helpers.get_master_instances_ips(deployment_id, config)
         f = open(local_work_dir + '/.mesos_all_ips', 'w')
         fm = open(local_work_dir + '/.mesos_masters_ips', 'w')
@@ -64,7 +64,7 @@ def setup(step, config):
             f.write(ip + "\n")
             fm.write(ip + "\n")
 
-        print "==> Writing mesos slaves ips in " + local_work_dir + "/.mesos_slaves_ips files"
+        print("==> Writing mesos slaves ips in " + local_work_dir + "/.mesos_slaves_ips files")
         slaves_ips = setup_helpers.get_slave_instances_ips(deployment_id, config)
         fs = open(local_work_dir + '/.mesos_slaves_ips', 'w')
         for ip in slaves_ips:
@@ -77,30 +77,30 @@ def setup(step, config):
     # ******************************* Install Mesos Sphere on the servers. ********************************
     elif step == 3:
         setup_helpers.are_hosts_up(mesos_all_ips_list)
-        print "==> Add Mesosphere repository to resources list of ALL hosts"
+        print("==> Add Mesosphere repository to resources list of ALL hosts")
         script_path_name = os.getcwd() + "/vm_files/add_mesos_sphere_repo_and_install_java.sh"
         script_name = ntpath.basename(script_path_name)
 
-        print ("==> Uploading %s to %s" % (script_path_name, dst_work_dir))
+        print("==> Uploading %s to %s" % (script_path_name, dst_work_dir))
         setup_helpers.upload_to_multiple_hosts(dst_user_name, mesos_all_ips_list, script_path_name, dst_work_dir)
 
-        print ("==> Running %s/%s script" % (dst_work_dir, script_name))
+        print("==> Running %s/%s script" % (dst_work_dir, script_name))
         setup_helpers.run_cmd_on_multiple_hosts(dst_user_name, mesos_all_ips_list,
                                                 "/bin/bash " + dst_work_dir + "/" + script_name)
 
     elif step == 4:
-        print "==> On master hosts, install mesos and marathon package"
+        print("==> On master hosts, install mesos and marathon package")
         setup_helpers.run_cmd_on_multiple_hosts(dst_user_name, mesos_masters_ips_list,
                                                 "sudo apt-get install -y mesos marathon")
 
         # For your slave hosts, you only need the mesos package, which also pulls in zookeeper as a dependency:
-        print "==> On slave hosts, install mesos package"
+        print("==> On slave hosts, install mesos package")
         setup_helpers.run_cmd_on_multiple_hosts(dst_user_name, mesos_slaves_ips_list, "sudo apt-get -y install mesos")
 
     elif step == 5:
         # configure our zookeeper connection info. This is the underlying layer that allows all of our hosts to connect
         # to the correct master servers.
-        print "==> configure zookeepr connection info"
+        print("==> configure zookeepr connection info")
         config = "zk://"
         f = open(local_work_dir + '/.mesos_masters_ips', 'r')
         for ip in f:
@@ -142,7 +142,7 @@ def setup(step, config):
         script_path_name = setup_helpers.create_zk_conf_script(config)
         # script_name = ntpath.basename(script_path_name)
 
-        print ("==> Uploading %s to /etc/zookeeper/conf/" % script_path_name)
+        print("==> Uploading %s to /etc/zookeeper/conf/" % script_path_name)
         setup_helpers.upload_to_multiple_hosts(dst_user_name, mesos_masters_ips_list, script_path_name,
                                                "/etc/zookeeper/conf/", use_sudo=True)
 
@@ -163,27 +163,27 @@ def setup(step, config):
 
     # ******************************* Master Servers' Marathon Configuration ********************************
     elif step == 9:
-        print "==> Configuring Master server's Marathon configuration"
+        print("==> Configuring Master server's Marathon configuration")
         script_path_name = os.getcwd() + "/vm_files/master_marathon_conf.sh"
         script_name = ntpath.basename(script_path_name)
 
-        print ("==> Uploading %s to %s" % (script_path_name, dst_work_dir))
+        print("==> Uploading %s to %s" % (script_path_name, dst_work_dir))
         setup_helpers.upload_to_multiple_hosts(dst_user_name, mesos_masters_ips_list, script_path_name, dst_work_dir)
 
-        print ("==> Running %s/%s script" % (dst_work_dir, script_name))
+        print("==> Running %s/%s script" % (dst_work_dir, script_name))
         setup_helpers.run_cmd_on_multiple_hosts(dst_user_name, mesos_masters_ips_list,
                                                 "/bin/bash " + dst_work_dir + "/" + script_name)
 
     # ******************************* Configure Service Init Rules and Restart Services ********************************
     elif step == 10:
-        print "==> Configuring Service init rules and Restart Services"
+        print("==> Configuring Service init rules and Restart Services")
         script_path_name = os.getcwd() + "/vm_files/srv_init_rules_and_restart_srv.sh"
         script_name = ntpath.basename(script_path_name)
 
-        print ("==> Uploading %s to %s" % (script_path_name, dst_work_dir))
+        print("==> Uploading %s to %s" % (script_path_name, dst_work_dir))
         setup_helpers.upload_to_multiple_hosts(dst_user_name, mesos_masters_ips_list, script_path_name, dst_work_dir)
 
-        print ("==> Running %s/%s script" % (dst_work_dir, script_name))
+        print("==> Running %s/%s script" % (dst_work_dir, script_name))
         setup_helpers.run_cmd_on_multiple_hosts(dst_user_name, mesos_masters_ips_list,
                                                 "/bin/bash " + dst_work_dir + "/" + script_name)
 
@@ -191,23 +191,23 @@ def setup(step, config):
     #                                               SLAVE NODEs setup
     # ##################################################################################################################
     elif step == 11:
-        print "==> Configuring slave nodes"
+        print("==> Configuring slave nodes")
         f = open(local_work_dir + '/.mesos_slaves_ips', 'r')
         for ip in f:
             ip = ip.rstrip()
             script_path_name = setup_helpers.create_slave_conf_script(ip)
             script_name = ntpath.basename(script_path_name)
 
-            print ("==> Uploading %s to %s" % (script_path_name, dst_work_dir))
+            print("==> Uploading %s to %s" % (script_path_name, dst_work_dir))
             setup_helpers.upload_to_host(dst_user_name, ip, script_path_name, dst_work_dir)
 
-            print ("==> Running %s/%s script" % (dst_work_dir, script_name))
+            print("==> Running %s/%s script" % (dst_work_dir, script_name))
             setup_helpers.run_cmd_on_host(dst_user_name, ip, "/bin/bash " + dst_work_dir + "/" + script_name)
         f.close()
-        print "***************************************************************************************************"
-        print ("IPs files are located at " + local_work_dir +
-               " .You may need to give this location to your hydra_setup script.")
-        print "***************************************************************************************************"
+        print("***************************************************************************************************")
+        print("IPs files are located at " + local_work_dir +
+              " .You may need to give this location to your hydra_setup script.")
+        print("***************************************************************************************************")
 
 
 if __name__ == "__main__":
@@ -217,7 +217,7 @@ if __name__ == "__main__":
 
     if args.clean:
         # TODO: Needs to be updated. This should be a function and should clean the instances according to supplied tag.
-        print "==> Removing deployment nodes"
+        print("==> Removing deployment nodes")
         f = open(local_work_dir + '/.mesos_all_ips', 'r')
         for ip in f:
             ip = ip.rstrip()
@@ -227,7 +227,7 @@ if __name__ == "__main__":
         shell_call("rm " + local_work_dir + "/.mesos_slaves_ips")
     else:
         for step in range(args.start, args.end + 1):
-            print ("******************* starting step %d ***********************" % step)
+            print("******************* starting step %d ***********************" % step)
             mesos_all_ips_list = setup_helpers.get_mesos_all_ips(local_work_dir)
             mesos_masters_ips_list = setup_helpers.get_mesos_masters_ips(local_work_dir)
             mesos_slaves_ips_list = setup_helpers.get_mesos_slaves_ips(local_work_dir)
