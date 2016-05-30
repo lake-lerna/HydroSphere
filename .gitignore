@@ -1,0 +1,14 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+# IDE files
+.idea
+*.swp
+
+# Distribution / packaging
+build/
+build.pyc
+.python*
+
+# PyBuilder
+target/
