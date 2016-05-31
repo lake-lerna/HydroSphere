@@ -5,6 +5,7 @@ from contextlib import contextmanager
 import setup_helpers
 import ConfigParser
 
+
 @contextmanager
 def pushd(new_dir):
     previous_dir = os.getcwd()
