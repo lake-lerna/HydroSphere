@@ -7,6 +7,7 @@ from oauth2client.client import GoogleCredentials
 from tempfile import mkstemp
 from fabric.api import put, run, settings, sudo
 import socket
+import time
 
 credentials = GoogleCredentials.get_application_default()
 compute = discovery.build('compute', 'v1', credentials=credentials)
@@ -19,14 +20,14 @@ def get_email_id(config):
 
 # Function to get mesos instances ips as a list.
 # IPs have already been written in a file.
-def get_mesos_x_ips(setup_ips_dir, x="all"):
+def get_mesos_x_ips(setup_ips_dir, did, x="all"):
     file_path_name = ""
     if x == "masters":
-        file_path_name = setup_ips_dir + '/.mesos_masters_ips'
+        file_path_name = setup_ips_dir + '/.' + did + '_mesos_masters_ips'
     elif x == "slaves":
-        file_path_name = setup_ips_dir + '/.mesos_slaves_ips'
+        file_path_name = setup_ips_dir + '/.' + did + '_mesos_slaves_ips'
     elif x == "all":
-        file_path_name = setup_ips_dir + '/.mesos_all_ips'
+        file_path_name = setup_ips_dir + '/.' + did + '_mesos_all_ips'
 
     try:
         f = open(file_path_name)
@@ -44,18 +45,18 @@ def get_setting_val(config, setting_name):
 
 
 # Get all IP addresses (both masters and slaves)
-def get_mesos_all_ips(setup_ips_dir):
-    return get_mesos_x_ips(setup_ips_dir, x="all")
+def get_mesos_all_ips(setup_ips_dir, did):
+    return get_mesos_x_ips(setup_ips_dir, did, x="all")
 
 
 # Get master IP addresses
-def get_mesos_masters_ips(setup_ips_dir):
-    return get_mesos_x_ips(setup_ips_dir, x="masters")
+def get_mesos_masters_ips(setup_ips_dir, did):
+    return get_mesos_x_ips(setup_ips_dir, did, x="masters")
 
 
 # Get Slaves IPs
-def get_mesos_slaves_ips(setup_ips_dir):
-    return get_mesos_x_ips(setup_ips_dir, x="slaves")
+def get_mesos_slaves_ips(setup_ips_dir, did):
+    return get_mesos_x_ips(setup_ips_dir, did, x="slaves")
 
 
 # Function to get gcloud instances ips.
@@ -164,18 +165,22 @@ def run_cmd_on_host(dst_user_name, instance_ip, cmd, use_sudo=False):
             run(cmd)
 
 
-def is_host_up(ip):
+def is_host_up(ip, num_retries=10):
     original_timeout = socket.getdefaulttimeout()
-    new_timeout = 9
+    new_timeout = 10
+    delay = 3
     socket.setdefaulttimeout(new_timeout)
     host_status = False
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        s.connect((ip, 22))
-        host_status = True
-    except socket.error as e:
-        print("Error on connect: %s" % e)
-    s.close()
+    for retry in range(num_retries):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            s.connect((ip, 22))
+            host_status = True
+            break
+        except socket.error as e:
+            print("Error on connect: %s" % e)
+        s.close()
+        time.sleep(delay)
     socket.setdefaulttimeout(original_timeout)
     return host_status
 
@@ -212,6 +217,18 @@ clientPort=2181
     tfile.write(conf)
     tfile.close()
     return pathname
+
+
+def read_str_from_file(fname):
+    tfile = open(fname, 'r')
+    for line in tfile:
+        return line
+
+
+def write_to_file(fname, str_to_write):
+    tfile = open(fname, 'w')
+    tfile.write(str_to_write)
+    tfile.close()
 
 
 def create_slave_conf_script(ip):

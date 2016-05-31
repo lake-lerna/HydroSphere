@@ -2,22 +2,7 @@ import os
 import argparse
 import setup_helpers
 import ntpath
-
-parser = argparse.ArgumentParser(description='Hydra setup script')
-parser.add_argument('--setup_ips_dir', '-i', type=str, default=os.environ['HOME'],
-                    help='Directory where mesos_masters_ips, mesos_slaves_ips and mesos_all_ips files are located. '
-                         'Default is /home/$USER')
-
-parser.add_argument('--start', '-r', type=int, default=1, help='start step')
-parser.add_argument('--end', '-e', type=int, default=5, help='end step')
-args = parser.parse_args()
-
-setup_ips_dir = args.setup_ips_dir
-mesos_all_ips_list = setup_helpers.get_mesos_all_ips(setup_ips_dir)
-mesos_masters_ips_list = setup_helpers.get_mesos_masters_ips(setup_ips_dir)
-mesos_slaves_ips_list = setup_helpers.get_mesos_slaves_ips(setup_ips_dir)
-dst_work_dir = os.environ['HOME']
-dst_user_name = os.environ['USER']
+from shell_command import shell_call
 
 
 # TODO: Check whether IPs files exist?
@@ -42,7 +27,7 @@ def setup(step):
         print("==> Uploading %s to %s" % (script_path_name, dst_work_dir))
         setup_helpers.upload_to_multiple_hosts(dst_user_name, mesos_slaves_ips_list, script_path_name, dst_work_dir)
 
-        f = open(setup_ips_dir + '/.mesos_slaves_ips', 'r')
+        f = open(local_work_dir + '/.' + deployment_id + '_mesos_slaves_ips', 'r')
         for ip in f:
             ip = ip.strip()
             instance_tag = setup_helpers.get_instance_tag(ip)
@@ -80,6 +65,45 @@ def setup(step):
                                                 "pip install psutil pyzmq protobuf pika", use_sudo=True)
 
 if __name__ == "__main__":
-    for step in range(args.start, args.end + 1):
+    default_start_step = 1
+    default_end_step = 5
+
+    parser = argparse.ArgumentParser(description='Hydra setup script')
+    parser.add_argument('--deployment_id', '-i', type=str,
+                        help='Each cluster deployment needs to have a unique identifier. '
+                             'This will help in identifying various deployments.', required=True)
+    parser.add_argument('--cont', '-t', action='store_true',
+                        help='If your script fails because of any reason in middle of somethhing, use this flag. '
+                             'This flag will resume the script from failed step. ')
+
+    parser.add_argument('--start', '-r', type=int, default=default_start_step, help='start step')
+    parser.add_argument('--end', '-e', type=int, default=default_end_step, help='end step')
+    args = parser.parse_args()
+
+    deployment_id = args.deployment_id
+    local_work_dir = os.environ['HOME']
+    dst_work_dir = "/home/" + os.environ['USER']
+    dst_user_name = os.environ['USER']
+    end_step = args.end
+
+    step_file = local_work_dir + '/.' + deployment_id + '_hydra_setup_script_step'
+    # If continue is true
+    if args.cont:
+        start_step = int(setup_helpers.read_str_from_file(step_file)) + 1
+        print("continue is given. start_step=%d" % start_step)
+    else:
+        start_step = args.start
+
+    mesos_all_ips_list = setup_helpers.get_mesos_all_ips(local_work_dir, deployment_id)
+    mesos_masters_ips_list = setup_helpers.get_mesos_masters_ips(local_work_dir, deployment_id)
+    mesos_slaves_ips_list = setup_helpers.get_mesos_slaves_ips(local_work_dir, deployment_id)
+
+    for step in range(start_step, end_step + 1):
         print("******************* starting step %d ***********************" % step)
         setup(step)
+
+        setup_helpers.write_to_file(step_file, str(step))
+        if step == default_end_step:
+            # Remove step file
+            cmd = "rm " + step_file
+            shell_call(cmd)
