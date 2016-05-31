@@ -30,8 +30,8 @@ if __name__ == "__main__":
                         help='Absolute path of configuration file which dictates the number of master/slave nodes '
                              'along with their machine type. Default is ' + os.getcwd() + '/setup_config.ini .')
     parser.add_argument('--deployment_id', '-i', type=str,
-                        help='Each cluster deployment needs to have a unique identifier. '
-                             'This helps in creating multiple deployments in parallel.', required=True)
+                        help='Each cluster deployment needs to have a unique identifier.'
+                             ' This helps in creating multiple deployments in parallel.', required=True)
     parser.add_argument('--ssh_key_file', '-k', type=str, default=os.environ['HOME'] + "/.ssh/id_rsa.pub",
                         help='SSH public key absolute path. It would be used to get passwordless login to cloud '
                              'instances. Default is ~/.ssh/id_rsa.pub')
