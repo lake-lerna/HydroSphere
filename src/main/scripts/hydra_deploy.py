@@ -32,7 +32,6 @@ if __name__ == "__main__":
     #                         'This flag will resume the script from failed step. ')
 
     parser.add_argument('--clean', '-c', action='store_true', help='cleanup instances')
-    parser.add_argument('--test', '-t', action='store_true', help='cleanup instances')
     args = parser.parse_args()
 
     ssh_key_file = args.ssh_key_file
@@ -50,11 +49,9 @@ if __name__ == "__main__":
         f = open(local_work_dir + '/.' + deployment_id + '_mesos_all_ips', 'r')
         for ip in f:
             ip = ip.rstrip()
-            setup_helpers.delete_instance(config, ip)
+            # setup_helpers.delete_instance(config, ip)
         shell_call("rm " + local_work_dir + "/." + deployment_id + "_mesos_all_ips")
         shell_call("rm " + local_work_dir + "/." + deployment_id + "_mesos_masters_ips")
         shell_call("rm " + local_work_dir + "/." + deployment_id + "_mesos_slaves_ips")
-    elif args.test:
-        setup_helpers.test_fun()
     else:
         setup(config_file, deployment_id, ssh_key_file)
