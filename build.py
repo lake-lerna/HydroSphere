@@ -40,3 +40,4 @@ def set_properties(project):
     project.build_depends_on('shell_command')
     project.build_depends_on('fabric')
     project.build_depends_on('google-api-python-client')
+    pass
