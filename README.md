@@ -30,7 +30,7 @@ To setup a cluster with Hydra, use following commands
 
 4. Login to master node to run test cases <br />
     List current instances <br />
-    -> gcloud compute instances list | grep <user-name> <br />
+    -> gcloud compute instances list | grep \<user-name\> <br />
     Please note down the IP of your master node. It would be with name \<emailid-deploymentid-*\> <br />
     -> ssh \<master-ip\> <br />
     -> cd hydra-master <br />
@@ -39,4 +39,4 @@ To setup a cluster with Hydra, use following commands
 
 TO setup only mesos cluster without hydra, you can give following command <br />
 -> pushd hydra-deploy/src/main/python/hydra_deploy <br />
-  python mesos_marathon_setup.py --config_file setup_config.ini --deployment_id <unique id for deployment> --ssh_key_file \<path to your publick key\>
+-> python mesos_marathon_setup.py --config_file setup_config.ini --deployment_id <unique id for deployment> --ssh_key_file \<path to your public key\>
