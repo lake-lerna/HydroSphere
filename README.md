@@ -21,9 +21,9 @@ GCE is supported. To setup a cluster with Hydra, use following commands
   -> popd <br />
 
 3. Setup Mesos-Marathon Cluster and setup Hydra on master node
-  First of all, modify the setup configuration file. A sample file is given in hydra_deploy with name setup_config.ini .
+  First of all, modify the setup configuration file. A sample file is given in hydra_deploy with name setup_config.ini . <br />
   -> pushd hydra-deploy/src/main/python/hydra_deploy <br />
-  -> python master_mm_hydra_setup.py --config_file setup_config.ini --deployment_id <unique id for deployment> --ssh_key_file <path to your publick key>
+  -> python master_mm_hydra_setup.py --config_file setup_config.ini --deployment_id \<unique id for deployment\> <br /> --ssh_key_file \<path to your publick key\>
   
   You can access mesos on masterip:5050 and marathon on masterip:8080
 
@@ -36,6 +36,6 @@ GCE is supported. To setup a cluster with Hydra, use following commands
     -> source ../venv/bin/activate <br />
     -> hydra zmq <br />
 
-TO setup only mesos cluster without hydra, you can give following command
--> pushd hydra-deploy/src/main/python/hydra_deploy
-  python mesos_marathon_setup.py --config_file setup_config.ini --deployment_id <unique id for deployment> --ssh_key_file <path to your publick key>
+TO setup only mesos cluster without hydra, you can give following command <br />
+-> pushd hydra-deploy/src/main/python/hydra_deploy <br />
+  python mesos_marathon_setup.py --config_file setup_config.ini --deployment_id <unique id for deployment> --ssh_key_file \<path to your publick key\>
