@@ -4,8 +4,8 @@ This project helps you setting up mesos-marathon cluster along with Hydra on clo
 GCE is supported. To setup a cluster with Hydra, use following commands
 
 1. Do Gcloud configurations
-    -> curl https://sdk.cloud.google.com | bash
-    -> exec -l $SHELL
+    -> curl https://sdk.cloud.google.com | bash \n
+    -> exec -l $SHELL \n
     -> gcloud auth login
 
     -> gcloud config set project <gcloud project name>
