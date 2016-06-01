@@ -4,15 +4,15 @@ This project helps you setting up mesos-marathon cluster along with Hydra on clo
 GCE is supported. To setup a cluster with Hydra, use following commands
 
 1. Do Gcloud configurations
-    -> curl https://sdk.cloud.google.com | bash \n
-    -> exec -l $SHELL \n
-    -> gcloud auth login
+    -> curl https://sdk.cloud.google.com | bash <br />
+    -> exec -l $SHELL <br />
+    -> gcloud auth login <br />
 
-    -> gcloud config set project <gcloud project name>
-    -> gcloud config set compute/zone <zone-name e.g us-central1-f>
-    -> gcloud config set compute/region <region-name e.g us-central1>
-    -> gcloud config set component_manager/fixed_sdk_version 0.9.81
-    -> gcloud components -q update
+    -> gcloud config set project <gcloud project name> <br />
+    -> gcloud config set compute/zone <zone-name e.g us-central1-f> <br />
+    -> gcloud config set compute/region <region-name e.g us-central1> <br />
+    -> gcloud config set component_manager/fixed_sdk_version 0.9.81 <br />
+    -> gcloud components -q update <br />
 
 2. Clone and Install hydra-deploy 
   -> git clone https://github.com/lake-lerna/hydra-deploy
