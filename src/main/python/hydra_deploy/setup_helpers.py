@@ -98,7 +98,7 @@ def get_slave_instances_ips(did, config):
     return ips
 
 
-def spawn_instance(instance_name, dst_user, ssh_key_file, config, machine_type):
+def spawn_instance(instance_name, instance_user_name, ssh_key_file, config, machine_type):
     email_id = get_email_id(config)
     disk1_type = get_setting_val(config, "disk1type")
     disk2_type = get_setting_val(config, "disk2type")
@@ -113,7 +113,7 @@ def spawn_instance(instance_name, dst_user, ssh_key_file, config, machine_type):
 
     with open(ssh_key_file) as f:
         lines = f.readlines()
-        tfile.writelines(dst_user + ":" + lines[0])
+        tfile.writelines(instance_user_name + ":" + lines[0])
     tfile.close()
 
     if disk1_image == "ubuntu-12-04" or disk1_image == "ubuntu-14-04":
@@ -150,8 +150,8 @@ def delete_instance(config, ip):
                                instance=instance_name).execute()
 
 
-def upload_to_host(dst_user_name, instance_ip, src_pathname, dst_path, use_sudo=False):
-    with settings(host_string=instance_ip, user=dst_user_name):
+def upload_to_host(instance_user_name, instance_ip, src_pathname, dst_path, use_sudo=False):
+    with settings(host_string=instance_ip, user=instance_user_name):
         if use_sudo:
             put(src_pathname, dst_path, use_sudo=True)
         else:
@@ -160,16 +160,16 @@ def upload_to_host(dst_user_name, instance_ip, src_pathname, dst_path, use_sudo=
 
 # Assumes that all hosts have same username. If your hostnames are different then
 # use upload_to_host() function.
-def upload_to_multiple_hosts(dst_user_name, hosts_list, src_pathname, dst_path, use_sudo=False):
+def upload_to_multiple_hosts(instance_user_name, hosts_list, src_pathname, dst_path, use_sudo=False):
     for instance_ip in hosts_list:
         if use_sudo:
-            upload_to_host(dst_user_name, instance_ip, src_pathname, dst_path, use_sudo=True)
+            upload_to_host(instance_user_name, instance_ip, src_pathname, dst_path, use_sudo=True)
         else:
-            upload_to_host(dst_user_name, instance_ip, src_pathname, dst_path)
+            upload_to_host(instance_user_name, instance_ip, src_pathname, dst_path)
 
 
-def run_cmd_on_host(dst_user_name, instance_ip, cmd, use_sudo=False):
-    with settings(host_string=instance_ip, user=dst_user_name):
+def run_cmd_on_host(instance_user_name, instance_ip, cmd, use_sudo=False):
+    with settings(host_string=instance_ip, user=instance_user_name):
         if use_sudo:
             sudo(cmd)
         else:
@@ -207,12 +207,12 @@ def are_hosts_up(hosts_list):
 
 # Assumes that all hosts have same username. If your hostnames are different then
 # use upload_to_host() function.
-def run_cmd_on_multiple_hosts(dst_user_name, hosts_list, cmd, use_sudo=False):
+def run_cmd_on_multiple_hosts(instance_user_name, hosts_list, cmd, use_sudo=False):
     for instance_ip in hosts_list:
         if use_sudo:
-            run_cmd_on_host(dst_user_name, instance_ip, cmd, use_sudo=True)
+            run_cmd_on_host(instance_user_name, instance_ip, cmd, use_sudo=True)
         else:
-            run_cmd_on_host(dst_user_name, instance_ip, cmd)
+            run_cmd_on_host(instance_user_name, instance_ip, cmd)
 
 
 def create_zk_conf_script(conf):
