@@ -61,10 +61,13 @@ def setup(step):
             dst_user_name, mesos_slaves_ips_list,
             "apt-get install -y python-dev python-pip libtool pkg-config build-essential autoconf automake",
             use_sudo=True)
+        print("==> Install libzmq3-dev")
         setup_helpers.run_cmd_on_multiple_hosts(
             dst_user_name, mesos_slaves_ips_list,
-            "sudo add-apt-repository ppa:chris-lea/zeromq -y && sudo apt-get update && sudo apt-get install -y libzmq3-dev",
+            "sudo add-apt-repository ppa:chris-lea/zeromq -y && sudo apt-get update "
+            "&& sudo apt-get install -y libzmq3-dev",
             use_sudo=True)
+        print("==> pip install psutil pyzmq protobuf pika")
         setup_helpers.run_cmd_on_multiple_hosts(dst_user_name, mesos_slaves_ips_list,
                                                 "pip install psutil pyzmq protobuf pika", use_sudo=True)
 
