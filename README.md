@@ -1,6 +1,6 @@
 # HydroSphere
 
-This project helps you setting up mesos-marathon cluster along with Hydra on cloud (GCE, AWS, Azure). For now, only
+This project helps you setting up mesos-marathon cluster along with [Hydra] (https://github.com/lake-lerna/hydra) on cloud (GCE, AWS, Azure). For now, only
 GCE is supported. <br />
 To setup a cluster with Hydra, use following commands
 
