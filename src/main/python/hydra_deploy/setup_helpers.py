@@ -119,8 +119,8 @@ def spawn_instance(instance_name, dst_user, ssh_key_file, config, machine_type):
     if disk1_image == "ubuntu-12-04" or disk1_image == "ubuntu-14-04":
         disk1_cmd = "gcloud compute disks create " + instance_name + "-d1 --image " + disk1_image + \
                     " --type " + disk1_type + " --size=" + disk1_size + " -q"
-        disk2_cmd = "gcloud compute disks create " + instance_name + "-d2 --type " + disk2_type + " --size=" + disk2_size \
-                    + " -q"
+        disk2_cmd = "gcloud compute disks create " + instance_name + "-d2 --type " + disk2_type + " --size=" + \
+                    disk2_size + " -q"
     else:
         print ("Going to spawn image from snapshot")
         disk1_cmd = "gcloud compute disks create " + instance_name + "-d1 --source-snapshot " + disk1_image + \
