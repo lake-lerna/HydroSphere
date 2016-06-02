@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 tag=$1
 echo "${tag}"
 

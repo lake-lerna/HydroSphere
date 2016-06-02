@@ -22,7 +22,10 @@ virtualenv ${venv_dir}
 source ${venv_dir}/bin/activate
 
 echo "Install Hydra"
-sudo apt-get -y install protobuf-c-compiler libzmq3-dev protobuf-compiler libprotobuf-dev
+sudo apt-get -y install protobuf-c-compiler protobuf-compiler libprotobuf-dev
+sudo add-apt-repository ppa:chris-lea/zeromq -y
+sudo apt-get update
+sudo apt-get install -y libzmq3-dev
 pip install pybuilder
 pushd ${dst_work_dir}/hydra-master
 pyb install_dependencies

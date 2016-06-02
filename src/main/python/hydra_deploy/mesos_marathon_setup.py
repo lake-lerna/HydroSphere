@@ -29,10 +29,10 @@ def setup(step, config):
         # Purpose of this step is to enable the script to work for physical or other (e.g AWS) deployments.
         # All user has to do is to create a text file holding ips and run script from step 3.
         # TODO: 1. Write first 2 steps as a seperate script and call it as infra_setup(). Infra setup script
-        #                    may be written for various environments like AZURE, AWS etc.
-        #               2. Current script will start from step 3 and will be called mesos_setup().
-        #               3. Another script will take infra as argument (GCE, AWS, Azure) and will call appropriate
-        #                    infra script along with mesos setup.
+        #          may be written for various environments like AZURE, AWS etc.
+        #       2. Current script will start from step 3 and will be called mesos_setup().
+        #       3. Another script will take infra as argument (GCE, AWS, Azure) and will call appropriate
+        #          infra script along with mesos setup.
         print("==> Writing mesos masters ips in " + local_work_dir + "/." + deployment_id + "_mesos_masters_ips files")
         master_ips = setup_helpers.get_master_instances_ips(deployment_id, config)
         f = open(local_work_dir + '/.' + deployment_id + '_mesos_all_ips', 'w')
