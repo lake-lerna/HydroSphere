@@ -98,10 +98,12 @@ def get_slave_instances_ips(did, config):
     return ips
 
 
-def spawn_instance(instance_name, os_name, dst_user, ssh_key_file, config, machine_type):
+def spawn_instance(instance_name, dst_user, ssh_key_file, config, machine_type):
     email_id = get_email_id(config)
     disk1_type = get_setting_val(config, "disk1type")
     disk2_type = get_setting_val(config, "disk2type")
+    disk1_image = get_setting_val(config, "disk1image")
+    disk2_image = get_setting_val(config, "disk2image")
     disk1_size = get_setting_val(config, "disk1size")
     disk2_size = get_setting_val(config, "disk2size")
 
@@ -114,12 +116,21 @@ def spawn_instance(instance_name, os_name, dst_user, ssh_key_file, config, machi
         tfile.writelines(dst_user + ":" + lines[0])
     tfile.close()
 
-    disk1_cmd = "gcloud compute disks create " + instance_name + "-d1 --image " + os_name + \
-                " --type " + disk1_type + " --size=" + disk1_size + " -q"
+    if disk1_image == "ubuntu-12-04" or disk1_image == "ubuntu-14-04":
+        disk1_cmd = "gcloud compute disks create " + instance_name + "-d1 --image " + disk1_image + \
+                    " --type " + disk1_type + " --size=" + disk1_size + " -q"
+        disk2_cmd = "gcloud compute disks create " + instance_name + "-d2 --type " + disk2_type + " --size=" + disk2_size \
+                    + " -q"
+    else:
+        print ("Going to spawn image from snapshot")
+        disk1_cmd = "gcloud compute disks create " + instance_name + "-d1 --source-snapshot " + disk1_image + \
+                    " --type " + disk1_type + " --size=" + disk1_size + " -q"
+        disk2_cmd = "gcloud compute disks create " + instance_name + "-d2 --source-snapshot " + disk2_image + \
+                    " --type " + disk1_type + " --size=" + disk2_size + " -q"
+
     print("disk1_cmd=%s" % disk1_cmd)
     shell_call(disk1_cmd)
-    disk2_cmd = "gcloud compute disks create " + instance_name + "-d2 --type " + disk2_type + " --size=" + disk2_size \
-                + " -q"
+
     print("disk2_cmd=%s" % disk2_cmd)
     shell_call(disk2_cmd)
     cmd = "gcloud compute instances create " + instance_name + " --machine-type " + machine_type + \

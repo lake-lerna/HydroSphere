@@ -12,12 +12,12 @@ def setup(step):
         setup_helpers.run_cmd_on_host(dst_user_name, mesos_masters_ips_list[0], "sudo apt-get -y install git unzip")
         setup_helpers.run_cmd_on_host(dst_user_name, mesos_masters_ips_list[0],
                                       "wget https://github.com/sushilks/hydra/archive/master.zip && unzip master.zip")
-        print("==> Install protobuf on all nodes")
-        setup_helpers.run_cmd_on_multiple_hosts(
-            dst_user_name, mesos_all_ips_list,
-            "wget http://launchpadlibrarian.net/160197953/libprotobuf7_2.4.1-3ubuntu4_amd64.deb")
-        setup_helpers.run_cmd_on_multiple_hosts(dst_user_name, mesos_all_ips_list,
-                                                "dpkg -i ./libprotobuf7_2.4.1-3ubuntu4_amd64.deb", use_sudo=True)
+        # print("==> Install protobuf on all nodes")
+        # setup_helpers.run_cmd_on_multiple_hosts(
+        #    dst_user_name, mesos_all_ips_list,
+        #    "wget http://launchpadlibrarian.net/160197953/libprotobuf7_2.4.1-3ubuntu4_amd64.deb")
+        # setup_helpers.run_cmd_on_multiple_hosts(dst_user_name, mesos_all_ips_list,
+        #                                        "dpkg -i ./libprotobuf7_2.4.1-3ubuntu4_amd64.deb", use_sudo=True)
 
     elif step == 2:
         print("==> Add grouping to slaves so that you can steer the workload")
@@ -59,7 +59,11 @@ def setup(step):
         print("==> Install packages for hydra on slave")
         setup_helpers.run_cmd_on_multiple_hosts(
             dst_user_name, mesos_slaves_ips_list,
-            "apt-get install -y python-dev python-pip libzmq3-dev libtool pkg-config build-essential autoconf automake",
+            "apt-get install -y python-dev python-pip libtool pkg-config build-essential autoconf automake",
+            use_sudo=True)
+        setup_helpers.run_cmd_on_multiple_hosts(
+            dst_user_name, mesos_slaves_ips_list,
+            "sudo add-apt-repository ppa:chris-lea/zeromq -y && sudo apt-get update && sudo apt-get install -y libzmq3-dev",
             use_sudo=True)
         setup_helpers.run_cmd_on_multiple_hosts(dst_user_name, mesos_slaves_ips_list,
                                                 "pip install psutil pyzmq protobuf pika", use_sudo=True)

@@ -22,7 +22,7 @@ def setup(step, config):
                 tag = options_dict["tag"]
                 for i in range(int(count)):
                     instance_name = deployment_id + "-" + section + "-" + tag + "-" + str(i)
-                    setup_helpers.spawn_instance(instance_name, "ubuntu-14-04", dst_user_name, ssh_key_file, config,
+                    setup_helpers.spawn_instance(instance_name, dst_user_name, ssh_key_file, config,
                                                  machine_type)
 
     elif step == 2:
@@ -194,8 +194,9 @@ if __name__ == "__main__":
     parser.add_argument('--config_file', '-f', type=str,
                         default=os.getcwd() + "/setup_config.ini",
                         help='Setup configuration file. File holds your gcloud confiuration settings. It also holds '
-                             'values of number of master/slave nodes.A sample configuration file can be found at '
-                             'hydra-deploy/src/main/python/gcloud/setup_config.ini. ')
+                             'values of number of master/slave nodes. A sample configuration file can be found at '
+                             'hydra-deploy/src/main/python/gcloud/setup_config.ini (This is also default conf file). ')
+
     parser.add_argument('--deployment_id', '-i', type=str,
                         help='Each cluster deployment needs to have a unique identifier. '
                              'This helps in creating multiple deployments in parallel.', required=True)
