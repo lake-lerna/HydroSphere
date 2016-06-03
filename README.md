@@ -42,5 +42,5 @@ TO setup only mesos cluster without hydra, you can give following command <br />
 -> pushd HydroSphere/src/main/python/hydro_sphere <br />
 -> python mesos_marathon_setup.py --config_file setup_config.ini --deployment_id <unique id for deployment> --ssh_key_file \<path to your public key\> <br />
 
-If you want to setup hydra later on Mesos/Maratho cluster, you can issue the command
+If you want to setup hydra later on Mesos/Maratho cluster, you can issue the command <br />
 -> python hydra_setup_script.py --deployment_id <unique id for deployment> --instance_user <instance_user_name mentioned in your config file>
