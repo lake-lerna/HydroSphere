@@ -84,7 +84,8 @@ def get_instance_tag(ip):
     instance_name = output.split()[0]  # tahir-deploymentid-section-tag-0
     tag_lst = instance_name.split("-")[3:-1]        # ['slave', 'set1']
     tag = "-".join(tag_lst)
-    return tag
+    instance_number = instance_name.split("-")[-1:]  # 0
+    return (tag, instance_number[0])
 
 
 def get_slave_instances_ips(did, config):

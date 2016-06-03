@@ -1,11 +1,13 @@
 #!/bin/bash -e
-tag=$1
-echo "${tag}"
+group=$1
+slave_id=$2
+echo "group=${group} and slave_id=${slave_id}"
 
 sudo service mesos-slave stop
 # Add grouping informaiton
 sudo mkdir -p /etc/mesos-slave/attributes/
-echo ${tag} | sudo tee /etc/mesos-slave/attributes/group
+echo ${group} | sudo tee /etc/mesos-slave/attributes/group
+echo ${slave_id} | sudo tee /etc/mesos-slave/attributes/slave_id
 # add additional port resources
 echo "ports:[2000-32000]" | sudo tee /etc/mesos-slave/resources
 # Linux by default uses port 23768-61000
