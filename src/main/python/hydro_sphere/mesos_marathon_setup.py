@@ -73,7 +73,8 @@ def setup(step, config):
 
         # For your slave hosts, you only need the mesos package, which also pulls in zookeeper as a dependency:
         print("==> On slave hosts, install mesos package")
-        setup_helpers.run_cmd_on_multiple_hosts(instance_user_name, mesos_slaves_ips_list, "sudo apt-get -y install mesos")
+        setup_helpers.run_cmd_on_multiple_hosts(instance_user_name, mesos_slaves_ips_list,
+                                                "sudo apt-get -y install mesos")
 
     elif step == 5:
         # configure our zookeeper connection info. This is the underlying layer that allows all of our hosts to connect
@@ -134,7 +135,8 @@ def setup(step, config):
         f = open(local_work_dir + '/.' + deployment_id + '_mesos_masters_ips', 'r')
         for ip in f:
             ip = ip.strip()
-            setup_helpers.run_cmd_on_host(instance_user_name, ip, "echo " + ip + " > /etc/mesos-master/ip", use_sudo=True)
+            setup_helpers.run_cmd_on_host(instance_user_name, ip, "echo " + ip + " > /etc/mesos-master/ip",
+                                          use_sudo=True)
             setup_helpers.run_cmd_on_host(instance_user_name, ip, "echo " + ip + " > /etc/mesos-master/hostname",
                                           use_sudo=True)
         f.close()
@@ -146,7 +148,8 @@ def setup(step, config):
         script_name = ntpath.basename(script_path_name)
 
         print("==> Uploading %s to %s" % (script_path_name, dst_work_dir))
-        setup_helpers.upload_to_multiple_hosts(instance_user_name, mesos_masters_ips_list, script_path_name, dst_work_dir)
+        setup_helpers.upload_to_multiple_hosts(instance_user_name, mesos_masters_ips_list, script_path_name,
+                                               dst_work_dir)
 
         print("==> Running %s/%s script" % (dst_work_dir, script_name))
         setup_helpers.run_cmd_on_multiple_hosts(instance_user_name, mesos_masters_ips_list,
@@ -159,7 +162,8 @@ def setup(step, config):
         script_name = ntpath.basename(script_path_name)
 
         print("==> Uploading %s to %s" % (script_path_name, dst_work_dir))
-        setup_helpers.upload_to_multiple_hosts(instance_user_name, mesos_masters_ips_list, script_path_name, dst_work_dir)
+        setup_helpers.upload_to_multiple_hosts(instance_user_name, mesos_masters_ips_list, script_path_name,
+                                               dst_work_dir)
 
         print("==> Running %s/%s script" % (dst_work_dir, script_name))
         setup_helpers.run_cmd_on_multiple_hosts(instance_user_name, mesos_masters_ips_list,

@@ -25,7 +25,6 @@ def setup(config_file, deployment_id, ssh_key_file):
                       instance_user_name
     shell_call(hydra_setup_cmd)
 
-    mesos_all_ips_list = setup_helpers.get_mesos_all_ips(local_work_dir, deployment_id)
     mesos_masters_ips_list = setup_helpers.get_mesos_masters_ips(local_work_dir, deployment_id)
     mesos_slaves_ips_list = setup_helpers.get_mesos_slaves_ips(local_work_dir, deployment_id)
 

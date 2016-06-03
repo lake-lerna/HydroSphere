@@ -10,7 +10,8 @@ from shell_command import shell_call
 def setup(step):
     if step == 1:
         print("==> Clone hydra on master node")
-        setup_helpers.run_cmd_on_host(instance_user_name, mesos_masters_ips_list[0], "sudo apt-get -y install git unzip")
+        setup_helpers.run_cmd_on_host(instance_user_name, mesos_masters_ips_list[0],
+                                      "sudo apt-get -y install git unzip")
         setup_helpers.run_cmd_on_host(instance_user_name, mesos_masters_ips_list[0],
                                       "wget https://github.com/sushilks/hydra/archive/master.zip && unzip master.zip")
 
@@ -20,7 +21,8 @@ def setup(step):
         script_name = ntpath.basename(script_path_name)
 
         print("==> Uploading %s to %s" % (script_path_name, dst_work_dir))
-        setup_helpers.upload_to_multiple_hosts(instance_user_name, mesos_slaves_ips_list, script_path_name, dst_work_dir)
+        setup_helpers.upload_to_multiple_hosts(instance_user_name, mesos_slaves_ips_list, script_path_name,
+                                               dst_work_dir)
 
         f = open(local_work_dir + '/.' + deployment_id + '_mesos_slaves_ips', 'r')
         for ip in f:
@@ -44,7 +46,8 @@ def setup(step):
         script_name = ntpath.basename(script_path_name)
 
         print("==> Uploading %s to %s" % (script_path_name, dst_work_dir))
-        setup_helpers.upload_to_multiple_hosts(instance_user_name, mesos_masters_ips_list, script_path_name, dst_work_dir)
+        setup_helpers.upload_to_multiple_hosts(instance_user_name, mesos_masters_ips_list, script_path_name,
+                                               dst_work_dir)
 
         print("==> Running %s/%s script" % (dst_work_dir, script_name))
         setup_helpers.run_cmd_on_multiple_hosts(instance_user_name, mesos_masters_ips_list,
