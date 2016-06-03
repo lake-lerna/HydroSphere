@@ -219,7 +219,6 @@ if __name__ == "__main__":
     config_file = args.config_file
     deployment_id = args.deployment_id
     local_work_dir = os.environ['HOME']
-    dst_work_dir = "/home/" + os.environ['USER']
 
     step_file = local_work_dir + '/.' + deployment_id + '_mesos_marathon_step'
     end_step = args.end
@@ -234,6 +233,7 @@ if __name__ == "__main__":
     config.read(config_file)
     sections = config.sections()
     instance_user_name = setup_helpers.get_setting_val(config, "instanceusername")
+    dst_work_dir = "/home/" + instance_user_name
 
     if args.clean:
         # TODO: Needs to be updated. This should be a function and should clean the instances according to supplied tag.

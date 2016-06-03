@@ -77,7 +77,7 @@ if __name__ == "__main__":
     parser.add_argument('--cont', '-t', action='store_true',
                         help='If your script fails because of any reason in middle of somethhing, use this flag. '
                              'This flag will resume the script from failed step. ')
-    parser.add_argument('--instance_user', '-u', action='store_true',
+    parser.add_argument('--instance_user', '-u', type=str,
                         help='User name of cloud instances.')
 
     parser.add_argument('--start', '-r', type=int, default=default_start_step, help='start step')
@@ -86,8 +86,8 @@ if __name__ == "__main__":
 
     deployment_id = args.deployment_id
     local_work_dir = os.environ['HOME']
-    dst_work_dir = "/home/" + os.environ['USER']
     instance_user_name = args.instance_user
+    dst_work_dir = "/home/" + instance_user_name
     end_step = args.end
 
     step_file = local_work_dir + '/.' + deployment_id + '_hydra_setup_script_step'

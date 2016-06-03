@@ -21,7 +21,7 @@ def setup(config_file, deployment_id, ssh_key_file):
                                " --deployment_id " + deployment_id + " --ssh_key_file " + ssh_key_file
     shell_call(mesos_marathon_setup_cmd)
 
-    hydra_setup_cmd = "python hydra_setup_script.py --deployment_id " + deployment_id + " --instance_user_name " + \
+    hydra_setup_cmd = "python hydra_setup_script.py --deployment_id " + deployment_id + " --instance_user " + \
                       instance_user_name
     shell_call(hydra_setup_cmd)
 
