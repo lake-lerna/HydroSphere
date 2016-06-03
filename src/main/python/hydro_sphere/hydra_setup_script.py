@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import os
 import argparse
 import setup_helpers
@@ -9,15 +10,10 @@ from shell_command import shell_call
 def setup(step):
     if step == 1:
         print("==> Clone hydra on master node")
-        setup_helpers.run_cmd_on_host(dst_user_name, mesos_masters_ips_list[0], "sudo apt-get -y install git unzip")
-        setup_helpers.run_cmd_on_host(dst_user_name, mesos_masters_ips_list[0],
+        setup_helpers.run_cmd_on_host(instance_user_name, mesos_masters_ips_list[0],
+                                      "sudo apt-get -y install git unzip")
+        setup_helpers.run_cmd_on_host(instance_user_name, mesos_masters_ips_list[0],
                                       "wget https://github.com/sushilks/hydra/archive/master.zip && unzip master.zip")
-        print("==> Install protobuf on all nodes")
-        setup_helpers.run_cmd_on_multiple_hosts(
-            dst_user_name, mesos_all_ips_list,
-            "wget http://launchpadlibrarian.net/160197953/libprotobuf7_2.4.1-3ubuntu4_amd64.deb")
-        setup_helpers.run_cmd_on_multiple_hosts(dst_user_name, mesos_all_ips_list,
-                                                "dpkg -i ./libprotobuf7_2.4.1-3ubuntu4_amd64.deb", use_sudo=True)
 
     elif step == 2:
         print("==> Add grouping to slaves so that you can steer the workload")
@@ -25,13 +21,14 @@ def setup(step):
         script_name = ntpath.basename(script_path_name)
 
         print("==> Uploading %s to %s" % (script_path_name, dst_work_dir))
-        setup_helpers.upload_to_multiple_hosts(dst_user_name, mesos_slaves_ips_list, script_path_name, dst_work_dir)
+        setup_helpers.upload_to_multiple_hosts(instance_user_name, mesos_slaves_ips_list, script_path_name,
+                                               dst_work_dir)
 
         f = open(local_work_dir + '/.' + deployment_id + '_mesos_slaves_ips', 'r')
         for ip in f:
             ip = ip.strip()
             instance_tag = setup_helpers.get_instance_tag(ip)
-            setup_helpers.run_cmd_on_host(dst_user_name, ip,
+            setup_helpers.run_cmd_on_host(instance_user_name, ip,
                                           "/bin/bash " + dst_work_dir + "/" + script_name + " " + instance_tag)
 
     elif step == 3:
@@ -40,7 +37,7 @@ def setup(step):
         script_name = ntpath.basename(script_path_name)
 
         print("==> Uploading %s to %s" % (script_path_name, dst_work_dir))
-        setup_helpers.upload_to_host(dst_user_name, mesos_masters_ips_list[0],
+        setup_helpers.upload_to_host(instance_user_name, mesos_masters_ips_list[0],
                                      script_path_name, dst_work_dir + "/hydra-master")
 
     elif step == 4:
@@ -49,19 +46,27 @@ def setup(step):
         script_name = ntpath.basename(script_path_name)
 
         print("==> Uploading %s to %s" % (script_path_name, dst_work_dir))
-        setup_helpers.upload_to_multiple_hosts(dst_user_name, mesos_masters_ips_list, script_path_name, dst_work_dir)
+        setup_helpers.upload_to_multiple_hosts(instance_user_name, mesos_masters_ips_list, script_path_name,
+                                               dst_work_dir)
 
         print("==> Running %s/%s script" % (dst_work_dir, script_name))
-        setup_helpers.run_cmd_on_multiple_hosts(dst_user_name, mesos_masters_ips_list,
+        setup_helpers.run_cmd_on_multiple_hosts(instance_user_name, mesos_masters_ips_list,
                                                 "/bin/bash " + dst_work_dir + "/" + script_name + " " + dst_work_dir)
 
     elif step == 5:
         print("==> Install packages for hydra on slave")
         setup_helpers.run_cmd_on_multiple_hosts(
-            dst_user_name, mesos_slaves_ips_list,
-            "apt-get install -y python-dev python-pip libzmq3-dev libtool pkg-config build-essential autoconf automake",
+            instance_user_name, mesos_slaves_ips_list,
+            "apt-get install -y python-dev python-pip libtool pkg-config build-essential autoconf automake",
             use_sudo=True)
-        setup_helpers.run_cmd_on_multiple_hosts(dst_user_name, mesos_slaves_ips_list,
+        print("==> Install libzmq3-dev")
+        setup_helpers.run_cmd_on_multiple_hosts(
+            instance_user_name, mesos_slaves_ips_list,
+            "sudo add-apt-repository ppa:chris-lea/zeromq -y && sudo apt-get update "
+            "&& sudo apt-get install -y libzmq3-dev",
+            use_sudo=True)
+        print("==> pip install psutil pyzmq protobuf pika")
+        setup_helpers.run_cmd_on_multiple_hosts(instance_user_name, mesos_slaves_ips_list,
                                                 "pip install psutil pyzmq protobuf pika", use_sudo=True)
 
 if __name__ == "__main__":
@@ -75,6 +80,8 @@ if __name__ == "__main__":
     parser.add_argument('--cont', '-t', action='store_true',
                         help='If your script fails because of any reason in middle of somethhing, use this flag. '
                              'This flag will resume the script from failed step. ')
+    parser.add_argument('--instance_user', '-u', type=str,
+                        help='User name of cloud instances.')
 
     parser.add_argument('--start', '-r', type=int, default=default_start_step, help='start step')
     parser.add_argument('--end', '-e', type=int, default=default_end_step, help='end step')
@@ -82,8 +89,8 @@ if __name__ == "__main__":
 
     deployment_id = args.deployment_id
     local_work_dir = os.environ['HOME']
-    dst_work_dir = "/home/" + os.environ['USER']
-    dst_user_name = os.environ['USER']
+    instance_user_name = args.instance_user
+    dst_work_dir = "/home/" + instance_user_name
     end_step = args.end
 
     step_file = local_work_dir + '/.' + deployment_id + '_hydra_setup_script_step'

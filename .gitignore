@@ -4,6 +4,7 @@ __pycache__/
 # IDE files
 .idea
 *.swp
+*.pyc
 
 # Distribution / packaging
 build/

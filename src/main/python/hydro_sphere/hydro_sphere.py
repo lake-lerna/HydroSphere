@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import os
 import argparse
 from shell_command import shell_call
@@ -19,9 +21,19 @@ def setup(config_file, deployment_id, ssh_key_file):
                                " --deployment_id " + deployment_id + " --ssh_key_file " + ssh_key_file
     shell_call(mesos_marathon_setup_cmd)
 
-    hydra_setup_cmd = "python hydra_setup_script.py --deployment_id " + deployment_id
+    hydra_setup_cmd = "python hydra_setup_script.py --deployment_id " + deployment_id + " --instance_user " + \
+                      instance_user_name
     shell_call(hydra_setup_cmd)
 
+    mesos_masters_ips_list = setup_helpers.get_mesos_masters_ips(local_work_dir, deployment_id)
+    mesos_slaves_ips_list = setup_helpers.get_mesos_slaves_ips(local_work_dir, deployment_id)
+
+    print ("*******************************************************************************")
+    print ("Hydra on Master node of Mesos cluster has been setup successfully. \n"
+           "Master IPs: %s \n" % mesos_masters_ips_list +
+           "Slaves IPs: %s \n" % mesos_slaves_ips_list +
+           "You can ssh to master using ssh username@masterip")
+    print ("*******************************************************************************")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Script to setup Mesos/Marathon cluster on Google Compute '
@@ -50,6 +62,7 @@ if __name__ == "__main__":
     config = ConfigParser.ConfigParser()
     config.read(config_file)
     sections = config.sections()
+    instance_user_name = setup_helpers.get_setting_val(config, "instanceusername")
 
     if args.clean:
         # TODO: Needs to be updated. This should be a function and should clean the instances according to supplied tag.

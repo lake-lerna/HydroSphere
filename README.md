@@ -1,4 +1,5 @@
-# HydroSphere
+# HydroSphere [![Build Status](https://travis-ci.org/lake-lerna/hydra.svg?branch=master)](https://travis-ci.org/tahir24434/HydroSphere)
+A project to setup Mesos/Marathon Cluster along with Hydra in automated way
 
 This project helps you setting up mesos-marathon cluster along with [Hydra] (https://github.com/lake-lerna/hydra) on cloud (GCE, AWS, Azure). For now, only
 GCE is supported. <br />
