@@ -16,16 +16,16 @@ To setup a cluster with Hydra, use following commands
     -> gcloud components -q update <br />
 
 2. Clone and Install hydra-deploy <br />
-  -> git clone https://github.com/lake-lerna/hydra-deploy <br />
-  -> pushd hydra-deploy <br />
+  -> git clone https://github.com/lake-lerna/HydroSphere <br />
+  -> pushd HydroSphere <br />
   -> pyb install_dependencies <br />
   -> pyb install <br />
   -> popd <br />
 
 3. Setup Mesos-Marathon Cluster and setup Hydra on master node <br />
   First of all, modify the setup configuration file. A sample file is given in hydra_deploy with name setup_config.ini . <br />
-  -> pushd hydra-deploy/src/main/python/hydra_deploy <br />
-  -> python master_mm_hydra_setup.py --config_file setup_config.ini --deployment_id \<unique id for deployment\> <br /> --ssh_key_file \<path to your publick key\> <br />
+  -> pushd HydroSphere/src/main/python/hydro_sphere <br />
+  -> python hydro_sphere.py --config_file setup_config.ini --deployment_id \<unique id for deployment\> <br /> --ssh_key_file \<path to your publick key\> <br />
   
   You can access mesos on masterip:5050 and marathon on masterip:8080
 
@@ -39,5 +39,8 @@ To setup a cluster with Hydra, use following commands
     -> hydra zmq <br />
 
 TO setup only mesos cluster without hydra, you can give following command <br />
--> pushd hydra-deploy/src/main/python/hydra_deploy <br />
--> python mesos_marathon_setup.py --config_file setup_config.ini --deployment_id <unique id for deployment> --ssh_key_file \<path to your public key\>
+-> pushd HydroSphere/src/main/python/hydro_sphere <br />
+-> python mesos_marathon_setup.py --config_file setup_config.ini --deployment_id <unique id for deployment> --ssh_key_file \<path to your public key\> <br />
+
+If you want to setup hydra later on Mesos/Maratho cluster, you can issue the command <br />
+-> python hydra_setup_script.py --deployment_id \<unique id for deployment\> --instance_user \<instance_user_name mentioned in your config file\>
