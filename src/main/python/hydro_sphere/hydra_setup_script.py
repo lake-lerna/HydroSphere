@@ -27,9 +27,10 @@ def setup(step):
         f = open(local_work_dir + '/.' + deployment_id + '_mesos_slaves_ips', 'r')
         for ip in f:
             ip = ip.strip()
-            instance_tag = setup_helpers.get_instance_tag(ip)
+            instance_tag, instance_num = setup_helpers.get_instance_tag(ip)
             setup_helpers.run_cmd_on_host(instance_user_name, ip,
-                                          "/bin/bash " + dst_work_dir + "/" + script_name + " " + instance_tag)
+                                          "/bin/bash " + dst_work_dir + "/" + script_name + " " + instance_tag +
+                                          " " + instance_num)
 
     elif step == 3:
         print("==> Upload conf file")
