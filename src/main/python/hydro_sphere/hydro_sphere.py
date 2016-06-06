@@ -35,4 +35,3 @@ if __name__ == "__main__":
         for step in range(args.start, args.end + 1):
             print ("======================= STEP %d =======================" % step)
             dep.deploy(step)
-

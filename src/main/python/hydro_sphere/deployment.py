@@ -29,7 +29,7 @@ class Deployment(object):
             print ("==> Create master and slave nodes <==")
             self.__create_instances(dep_id, common_section, config_sections)
 
-        elif step == 2: # TODO: Need to see that whether it actually can be used.
+        elif step == 2:
             # Populate master and slaves IP list. It will help us in performaing operations on master and slaves.
             print ("==> Populate master and slaves IP list <==")
             self.masters_ips_list = self.get_nodes_ips_list("master")
@@ -122,7 +122,7 @@ class Deployment(object):
             print("==> Running %s/%s script" % (dst_work_dir, script_name))
             self.run_cmd_on_multiple_instances(self.master_instances, "/bin/bash " + dst_work_dir + "/" + script_name)
 
-            # ******************************* Configure Service Init Rules and Restart Services ********************************
+        # **************************** Configure Service Init Rules and Restart Services ***************************
         elif step == 10:
             print("==> Configuring Service init rules and Restart Services")
             script_path_name = os.getcwd() + "/vm_files/srv_init_rules_and_restart_srv.sh"
@@ -134,9 +134,9 @@ class Deployment(object):
             print("==> Running %s/%s script" % (dst_work_dir, script_name))
             self.run_cmd_on_multiple_instances(self.master_instances, "/bin/bash " + dst_work_dir + "/" + script_name)
 
-        # ##################################################################################################################
+        # ###########################################################################################################
         #                                               SLAVE NODEs setup
-        # ##################################################################################################################
+        # ###########################################################################################################
         elif step == 11:
             print("==> Configuring slave nodes")
             for instance in self.slave_instances:
@@ -151,7 +151,7 @@ class Deployment(object):
             print("***************************************************************************************************")
             print("Mesos Cluster setup has been completed successfully. \n"
                   "Master IPs = %s \n"
-                  "Slave  IPS = %s" %(self.masters_ips_list, self.slaves_ips_list))
+                  "Slave  IPS = %s" % (self.masters_ips_list, self.slaves_ips_list))
             print("***************************************************************************************************")
 
         elif step == 12:
@@ -216,7 +216,7 @@ class Deployment(object):
                    "Master nodes IPs : %s \n"
                    "Slave nodes IPs : %s \n"
                    "You can do ssh <instance_username>@%s to run Hydra test \n"
-                   %(self.masters_ips_list, self.slaves_ips_list, self.master_instances[0].ip))
+                   % (self.masters_ips_list, self.slaves_ips_list, self.master_instances[0].ip))
             print ("*********************************************************************************************")
 
     @staticmethod

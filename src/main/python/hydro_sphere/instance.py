@@ -1,11 +1,10 @@
 #!/usr/bin/python
-import cloud_settings
-import disk
 from shell_command import shell_call
 import socket
 import time
 import subprocess
 from fabric.api import put, run, settings, sudo
+
 
 class Instance(object):
     def __init__(self, name, disk_list, machine_type, user_name):
