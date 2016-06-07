@@ -195,21 +195,15 @@ class Deployment(object):
             hydra_instance.run_cmd("/bin/bash " + dst_work_dir + "/" + script_name + " " + dst_work_dir)
 
         elif step == 16:
-            print("==> Install packages for hydra on slave")
-            self.run_cmd_on_multiple_instances(self.slave_instances,
-                                               "apt-get install -y python-dev python-pip libtool pkg-config "
-                                               "build-essential autoconf automake",
-                                               use_sudo=True)
-            print("==> Install libzmq3-dev")
-            self.run_cmd_on_multiple_instances(self.slave_instances,
-                                               "sudo add-apt-repository ppa:chris-lea/zeromq -y && sudo apt-get update "
-                                               "&& sudo apt-get install -y libzmq3-dev",
-                                               use_sudo=True
-                                               )
+            print("==> Installing required Hydra packages on slaves")
+            script_path_name = os.getcwd() + "/vm_files/hydra_pkgs_install_slaves.sh"
+            script_name = ntpath.basename(script_path_name)
 
-            print("==> pip install psutil pyzmq protobuf pika")
-            self.run_cmd_on_multiple_instances(self.slave_instances, "pip install psutil pyzmq protobuf pika",
-                                               use_sudo=True)
+            print("==> Uploading %s to %s" % (script_path_name, dst_work_dir))
+            self.upload_to_multiple_instances(self.slave_instances, script_path_name, dst_work_dir)
+
+            print("==> Running %s/%s script" % (dst_work_dir, script_name))
+            self.run_cmd_on_multiple_instances(self.slave_instances, "/bin/bash " + dst_work_dir + "/" + script_name)
 
             print ("*********************************************************************************************")
             print ("Mesos/Marathon cluster along with Hydra is up and running. \n"
