@@ -6,7 +6,7 @@ echo "**** $dst_work_dir"
 echo "==> Run pre script"
 wget https://raw.githubusercontent.com/zeromq/cppzmq/master/zmq.hpp
 #mv zmq.hpp ${dst_work_dir}/hydra-master/src/main/c/zmq
-mv zmq.hpp /usr/include/zmq.hpp
+sudo mv zmq.hpp /usr/include/zmq.hpp
 sudo apt-get -y install python-dev python-pip rabbitmq-server
 
 echo "==> Install RMQ pre-reqs for unit test using mock backend"
