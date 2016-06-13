@@ -32,7 +32,6 @@ def validate_deployment_id(deployment_id):
         raise ValueError(exception_msg)
 
 
-
 if __name__ == "__main__":
     deployment_id = validate_deployment_id(args.deployment_id)
     config_file = args.config_file
