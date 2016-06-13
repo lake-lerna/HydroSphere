@@ -78,12 +78,12 @@ class Instance(object):
             else:
                 put(src_pathname, dst_path)
 
-    def run_cmd(self, cmd, use_sudo=False):
-        with settings(host_string=self.ip, user=self.user_name):
-            if use_sudo:
-                sudo(cmd)
-            else:
-                run(cmd)
+    def run_cmd(self, cmd, use_sudo=False, forward_agent=False):
+            with settings(host_string=self.ip, user=self.user_name, forward_agent=forward_agent):
+                if use_sudo:
+                    sudo(cmd)
+                else:
+                    run(cmd)
 
     # This function makes sense only when instance name is of form <emailid>-<deploymentid>-<configsection>-<tag>-<num>.
     def get_instance_tag_and_num(self):
