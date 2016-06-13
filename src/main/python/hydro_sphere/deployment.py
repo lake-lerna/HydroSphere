@@ -158,7 +158,7 @@ class Deployment(object):
             print("==> Clone hydra on master node")
             hydra_instance = self.master_instances[0]
             hydra_instance.run_cmd("sudo apt-get -y install git unzip", use_sudo=True)
-            hydra_instance.run_cmd("wget https://github.com/sushilks/hydra/archive/master.zip && unzip master.zip")
+            hydra_instance.run_cmd("git clone git@github.com:lake-lerna/hydra.git hydra-master", forward_agent=True)
 
         elif step == 13:
             print("==> Add grouping to slaves so that you can steer the workload")
@@ -320,6 +320,9 @@ app_prefix: g1
 [mesos]
 ip: """ + master_node_ip + """
 port: 5050
+cluster0: slave_id.slave-set1_0
+cluster1: slave_id.slave-set1_1
+cluster2: slave_id.slave-set1_2
 
 [hydra]
 port: 9800
