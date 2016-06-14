@@ -158,7 +158,9 @@ class Deployment(object):
             print("==> Clone hydra on master node")
             hydra_instance = self.master_instances[0]
             hydra_instance.run_cmd("sudo apt-get -y install git unzip", use_sudo=True)
-            hydra_instance.run_cmd("git clone git@github.com:lake-lerna/hydra.git hydra-master", forward_agent=True)
+            # TODO(Muaaz): builder/corelib_hydra.py needs to be updated to use "git clone" for pipeline.
+            # hydra_instance.run_cmd("git clone git@github.com:lake-lerna/hydra.git hydra-master", forward_agent=True)
+            hydra_instance.run_cmd("wget https://github.com/lake-lerna/hydra/archive/master.zip && unzip master.zip")
 
         elif step == 13:
             print("==> Add grouping to slaves so that you can steer the workload")
