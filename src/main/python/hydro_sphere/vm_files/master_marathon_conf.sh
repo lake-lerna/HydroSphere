@@ -1,4 +1,5 @@
-#!/bin/bash -e
+#!/bin/bash
+set -e
 
 # Marathon configuration directory structure we need is not created automatically.
 # We will have to create the directory and then we can copy the file over.

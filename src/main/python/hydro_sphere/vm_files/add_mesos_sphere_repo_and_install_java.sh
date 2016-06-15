@@ -1,4 +1,5 @@
-#! /bin/bash -e
+#! /bin/bash
+set -e
 
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv E56151BF
 DISTRO=$(lsb_release -is | tr '[:upper:]' '[:lower:]')
