@@ -43,8 +43,9 @@ pyb install_dependencies
 pyb analyze
 
 echo "Run script"
-pyb publish -x run_unit_tests
-pyb install -x run_unit_tests
+pyb publish -x run_unit_tests -x run_integration_tests -x verify
+pyb install -x run_unit_tests -x run_integration_tests -x verify
+
 
 pyb test --verbose
 popd
