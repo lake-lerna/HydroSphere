@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 sudo apt-get install -y python-dev python-pip libtool pkg-config build-essential autoconf automake
 
