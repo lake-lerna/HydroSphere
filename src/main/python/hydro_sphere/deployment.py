@@ -207,6 +207,12 @@ class Deployment(object):
             print("==> Running %s/%s script" % (dst_work_dir, script_name))
             self.run_cmd_on_multiple_instances(self.slave_instances, "/bin/bash " + dst_work_dir + "/" + script_name)
 
+        elif step == 17:
+            print ("==> Check that deployment is fine")
+            hydra_instance = self.master_instances[0]
+            hydra_instance.run_cmd("source ~/venv/bin/activate && cd " + dst_work_dir +
+                                   "/hydra-master && pyb run_integration_tests -x run_unit_tests")
+
             print ("*********************************************************************************************")
             print ("Mesos/Marathon cluster along with Hydra is up and running. \n"
                    "Master nodes IPs : %s \n"
