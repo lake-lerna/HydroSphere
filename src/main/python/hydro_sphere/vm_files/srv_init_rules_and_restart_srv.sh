@@ -1,4 +1,5 @@
-#!/bin/bash -e
+#!/bin/bash
+set -e
 sudo service mesos-slave stop || true
 sudo bash -c "echo 'manual' > /etc/init/mesos-slave.override"
 sudo service zookeeper stop || true

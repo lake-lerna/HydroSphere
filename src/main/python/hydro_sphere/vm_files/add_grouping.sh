@@ -1,4 +1,5 @@
-#!/bin/bash -e
+#!/bin/bash
+set -e
 tag=$1
 slave_id=$2
 echo "tag=${tag} and slave_id=${slave_id}"

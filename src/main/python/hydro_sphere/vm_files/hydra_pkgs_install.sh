@@ -1,4 +1,5 @@
-#!/bin/bash -e
+#!/bin/bash
+set -e
 dst_work_dir=$1
 
 echo "**** $dst_work_dir"
