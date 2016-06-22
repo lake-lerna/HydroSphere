@@ -16,6 +16,7 @@ To setup a cluster with Hydra, use following commands
     -> gcloud components -q update <br />
 
 2. Clone and Install hydra-deploy <br />
+  -> sudo pip install pybuilder # (needed for pyb) <br />
   -> git clone https://github.com/lake-lerna/HydroSphere <br />
   -> pushd HydroSphere <br />
   -> pyb install_dependencies <br />
