@@ -52,7 +52,7 @@ class Instance(object):
                 print ("%s (%s) is ready" % (self.name, self.ip))
                 break
             except socket.error as e:
-                print("Error on connect: %s" % e)
+                print("Error on connect to %s (%s): %s" % (self.name, self.ip, e))
             s.close()
             time.sleep(delay)
         socket.setdefaulttimeout(original_timeout)
