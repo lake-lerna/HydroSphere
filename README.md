@@ -20,7 +20,6 @@ To setup a cluster with Hydra, use following commands
   -> git clone https://github.com/lake-lerna/HydroSphere <br />
   -> pushd HydroSphere <br />
   -> pyb install_dependencies <br />
-  -> pyb install <br />
   -> popd <br />
 
 3. Setup Mesos-Marathon Cluster and setup Hydra on master node <br />
