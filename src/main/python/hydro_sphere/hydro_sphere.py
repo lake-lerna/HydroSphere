@@ -25,7 +25,7 @@ args = parser.parse_args()
 def validate_deployment_id(deployment_id):
     # Since hydra depends on dashes and gce api doesn't allow other non-aphanumeric characters
     # in instance names, don't allow them in deployment_ids
-    if re.match(r"^[a-z0-9]+$", deployment_id):
+    if re.match(r"^[A-Za-z0-9]+$", deployment_id):
         return deployment_id
     else:
         exception_msg = "--deployment_id | -i <%s> cannot contain non-alphanumeric characters" % (deployment_id)
