@@ -38,7 +38,7 @@ popd
 popd
 
 echo "==> Install Hydra"
-pip install pybuilder
+pip install pybuilder fabric
 pushd ${dst_work_dir}/hydra-master
 pyb install_dependencies
 pip uninstall -y marathon && pip install -e git+https://github.com/thefactory/marathon-python.git#egg=marathon

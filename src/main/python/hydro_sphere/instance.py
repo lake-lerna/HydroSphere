@@ -4,6 +4,7 @@ import socket
 import time
 import subprocess
 from fabric.api import put, run, settings, sudo
+from fabric.contrib import files
 
 
 class Instance(object):
@@ -79,11 +80,15 @@ class Instance(object):
                 put(src_pathname, dst_path)
 
     def run_cmd(self, cmd, use_sudo=False, forward_agent=False):
-            with settings(host_string=self.ip, user=self.user_name, forward_agent=forward_agent):
-                if use_sudo:
-                    sudo(cmd)
-                else:
-                    run(cmd)
+        with settings(host_string=self.ip, user=self.user_name, forward_agent=forward_agent):
+            if use_sudo:
+                return sudo(cmd)
+            else:
+                return run(cmd)
+
+    def append_to_file(self, file_name, text, use_sudo=False):
+        with settings(host_string=self.ip, user=self.user_name):
+            files.append(file_name, text, use_sudo=use_sudo, partial=False, escape=True, shell=False)
 
     # This function makes sense only when instance name is of form <emailid>-<deploymentid>-<configsection>-<tag>-<num>.
     def get_instance_tag_and_num(self):
