@@ -208,6 +208,14 @@ class Deployment(object):
             self.run_cmd_on_multiple_instances(self.slave_instances, "/bin/bash " + dst_work_dir + "/" + script_name)
 
         elif step == 17:
+            print("==> Copying master public key to authorized key of all slaves")
+            master_instance = self.master_instances[0]
+            pub_key = master_instance.run_cmd("cat ~/.ssh/id_rsa.pub", use_sudo=True)
+            self.append_to_file_on_multiple_instances(self.slave_instances,
+                                                      "~/.ssh/authorized_keys",
+                                                      pub_key, use_sudo=True)
+
+        elif step == 18:
             print ("==> Check that deployment is fine")
             hydra_instance = self.master_instances[0]
             hydra_instance.run_cmd("source ~/venv/bin/activate && cd " + dst_work_dir +
@@ -230,6 +238,11 @@ class Deployment(object):
     def run_cmd_on_multiple_instances(instances, cmd, use_sudo=False):
         for instance in instances:
             instance.run_cmd(cmd, use_sudo)
+
+    @staticmethod
+    def append_to_file_on_multiple_instances(instances, file_name, text, use_sudo=False):
+        for instance in instances:
+            instance.append_to_file(file_name, text, use_sudo)
 
     def get_nodes_ips_list(self, prefix):
         deployment_id = self.config.deployment_id
