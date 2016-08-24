@@ -17,7 +17,7 @@ parser.add_argument('--deployment_id', '-i', type=str,
                     help='Each cluster deployment needs to have a unique identifier.'
                          ' This helps in creating multiple deployments in parallel.', required=True)
 parser.add_argument('--start', '-r', type=int, default=1, help='start step')
-parser.add_argument('--end', '-e', type=int, default=18, help='end step')
+parser.add_argument('--end', '-e', type=int, default=19, help='end step')
 parser.add_argument('--clean', '-c', action='store_true', help='cleanup instances')
 args = parser.parse_args()
 

@@ -216,6 +216,14 @@ class Deployment(object):
                                                       pub_key, use_sudo=True)
 
         elif step == 18:
+            print("==> Making changes to /proc filesystem permanantly")
+            text = ["vm.max_map_count = 600000", "kernel.pid_max = 200000"]
+            self.append_to_file_on_multiple_instances(self.slave_instances,
+                                                      "/etc/sysctl.conf",
+                                                      text, use_sudo=True)
+            self.run_cmd_on_multiple_instances(self.slave_instances, "sudo sysctl -p", use_sudo=True)
+
+        elif step == 19:
             print ("==> Check that deployment is fine")
             hydra_instance = self.master_instances[0]
             hydra_instance.run_cmd("source ~/venv/bin/activate && cd " + dst_work_dir +
