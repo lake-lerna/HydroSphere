@@ -178,7 +178,7 @@ class Deployment(object):
         elif step == 14:
             print("==> Upload conf file")
             hydra_instance = self.master_instances[0]
-            script_path_name = self.create_hydra_conf(hydra_instance.ip)
+            script_path_name = self.create_hydra_conf(hydra_instance.ip, len(self.slaves_ips_list))
             script_name = ntpath.basename(script_path_name)
 
             print("==> Uploading %s to %s" % (script_path_name, dst_work_dir))
@@ -338,9 +338,15 @@ clientPort=2181
         return pathname
 
     @staticmethod
-    def create_hydra_conf(master_node_ip):
+    def create_hydra_conf(master_node_ip, num_slave_nodes):
         pathname = "/tmp/hydra.ini"
         tfile = open(pathname, 'w')
+        # cluster0: slave_id.slave-set1_0
+        # cluster1: slave_id.slave-set1_1
+        slave_name_str = ""
+        for i in range(num_slave_nodes):
+            slave_name_str = slave_name_str + 'cluster' + str(i) + ': slave_id.slave-set1_' + str(i) + os.linesep
+
         string = """[marathon]
 ip: """ + master_node_ip + """
 port: 8080
@@ -349,10 +355,7 @@ app_prefix: g1
 [mesos]
 ip: """ + master_node_ip + """
 port: 5050
-cluster0: slave_id.slave-set1_0
-cluster1: slave_id.slave-set1_1
-cluster2: slave_id.slave-set1_2
-
+""" + slave_name_str + """
 [hydra]
 port: 9800
 dev: eth0
